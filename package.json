@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "transpile": "tsc -p .",
+    "transpile": "tsc -p scripts",
     "dev": "webpack -d",
     "build": "webpack -p"
   },

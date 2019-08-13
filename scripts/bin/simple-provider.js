@@ -31,6 +31,6 @@ class SimpleKeystoreProvider {
         return (this._keypairs.find(keypair => keypair.publicAddress === publicAddress) || null);
     }
 }
-exports.default = SimpleKeystoreProvider;
+exports.SimpleKeystoreProvider = SimpleKeystoreProvider;
 window.SimpleKeystoreProvider = SimpleKeystoreProvider;
 //# sourceMappingURL=simple-provider.js.map
