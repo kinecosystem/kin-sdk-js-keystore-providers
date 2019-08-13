@@ -1,9 +1,11 @@
 const path = require("path");
+const  glob = require("glob");
 
 module.exports = {
-  entry: {
-    "kin-sdk-sample-keystore-provider": __dirname + "/index.ts"
-  },
+  entry: glob.sync("./src/*.ts").reduce((obj, el) =>{
+    obj[path.parse(el).name] = el;
+    return obj
+ },{}),
   target: 'web',
   module: {
     rules: [
@@ -24,6 +26,6 @@ module.exports = {
   },
   output: {
     filename: "./[name].js",
-    path: path.resolve(__dirname, "public")
+    path: path.resolve(__dirname, "dist")
   }
 };

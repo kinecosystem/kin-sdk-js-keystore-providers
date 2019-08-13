@@ -1,6 +1,12 @@
 import KeystoreProvider from "@kinecosystem/kin-sdk-js/scripts/src/blockchain/keystoreProvider";
 import * as KinSdk from '@kinecosystem/kin-sdk-js/scripts/src/sdk'
 
+declare global{
+	interface Window {
+		SimpleKeystoreProvider: typeof SimpleKeystoreProvider
+	}
+}
+
 export default class SimpleKeystoreProvider implements KeystoreProvider {
 	private _sdk: typeof KinSdk;
 	private _keypairs: KinSdk.KeyPair[];
@@ -34,3 +40,6 @@ export default class SimpleKeystoreProvider implements KeystoreProvider {
 		return (this._keypairs.find(keypair => keypair.publicAddress === publicAddress) || null);
 	}
 }
+
+
+window.SimpleKeystoreProvider = SimpleKeystoreProvider
