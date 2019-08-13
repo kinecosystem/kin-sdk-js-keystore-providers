@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@kinecosystem/kin-sdk-js": "^0.1.0",
+    "@kinecosystem/kin-sdk-js": "^0.1.4",
     "ts-loader": "^6.0.4",
     "typescript": "^3.3.4000",
     "webpack": "^4.37.0",
     "webpack-cli": "^3.3.6"
+  },
+  "dependencies": {
+    "@kinecosystem/kin-sdk-node": "^0.9.4"
   }
 }
