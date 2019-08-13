@@ -1,23 +1,18 @@
 {
   "name": "@kinecosystem/kin-sdk-js-keystore-providers",
-  "version": "1.0.5",
-  "description": "",
-  "main": "index.ts",
+  "version": "1.0.11",
+  "main": "scripts/bin/index.js",
+  "types": "scripts/bin/index.d.ts",
   "scripts": {
     "transpile": "tsc -p scripts",
     "dev": "webpack -d",
     "build": "webpack -p"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@kinecosystem/kin-sdk-js": "^0.1.4",
     "ts-loader": "^6.0.4",
     "typescript": "^3.3.4000",
     "webpack": "^4.37.0",
     "webpack-cli": "^3.3.6"
-  },
-  "dependencies": {
-    "@kinecosystem/kin-sdk-node": "^0.9.4"
   }
 }
