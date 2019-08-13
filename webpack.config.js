@@ -26,8 +26,6 @@ module.exports = {
   },
   output: {
     filename: "./[name].js",
-    library: 'KinSdkSimpleKeystoreProvider',
-    globalObject: 'typeof self !== \'undefined\' ? self : this',
     path: path.resolve(__dirname, "public")
   }
 };
