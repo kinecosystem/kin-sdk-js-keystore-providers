@@ -1,10 +1,11 @@
 {
-  "name": "@kinecosystem/kin-sample-keystore-provider",
+  "name": "@kinecosystem/kin-sdk-js-keystore-providers",
   "version": "1.0.1",
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build-web": "webpack -p"
+    "dev": "webpack -d",
+    "build": "webpack -p"
   },
   "author": "",
   "license": "ISC",
