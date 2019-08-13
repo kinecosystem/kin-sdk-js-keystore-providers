@@ -1,9 +1,10 @@
 {
   "name": "@kinecosystem/kin-sdk-js-keystore-providers",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.ts",
   "scripts": {
+    "transpile": "tsc -p .",
     "dev": "webpack -d",
     "build": "webpack -p"
   },
