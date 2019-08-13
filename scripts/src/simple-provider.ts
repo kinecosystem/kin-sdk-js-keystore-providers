@@ -6,7 +6,7 @@ declare global{
 	}
 }
 
-export default class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
+export class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _sdk: typeof KinSdk;
 	private _keypairs: KinSdk.KeyPair[];
 

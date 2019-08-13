@@ -4,7 +4,7 @@ declare global {
         SimpleKeystoreProvider: typeof SimpleKeystoreProvider;
     }
 }
-export default class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
+export declare class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
     private readonly kinSdk;
     private readonly _seed?;
     private _sdk;

@@ -2,7 +2,7 @@ const path = require("path");
 const  glob = require("glob");
 
 module.exports = {
-  entry: glob.sync("./src/*.ts").reduce((obj, el) =>{
+  entry: glob.sync("./scripts/src/*.ts").reduce((obj, el) =>{
     obj[path.parse(el).name] = el;
     return obj
  },{}),
