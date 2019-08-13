@@ -1,5 +1,4 @@
-import KeystoreProvider from "@kinecosystem/kin-sdk-js/scripts/src/blockchain/keystoreProvider";
-import * as KinSdk from '@kinecosystem/kin-sdk-js/scripts/src/sdk'
+import * as KinSdk from "@kinecosystem/kin-sdk-js";
 
 declare global{
 	interface Window {
@@ -7,7 +6,7 @@ declare global{
 	}
 }
 
-export default class SimpleKeystoreProvider implements KeystoreProvider {
+export default class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _sdk: typeof KinSdk;
 	private _keypairs: KinSdk.KeyPair[];
 
