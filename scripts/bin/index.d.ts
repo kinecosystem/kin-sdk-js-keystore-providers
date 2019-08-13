@@ -1,1 +1,2 @@
-export { SimpleKeystoreProvider } from './simple-provider';
+import { SimpleKeystoreProvider } from './simple-provider';
+export { SimpleKeystoreProvider };
