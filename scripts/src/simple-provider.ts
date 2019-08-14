@@ -24,7 +24,7 @@ export class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
 		return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
 	}
 
-	public signTransaction(accountAddress: string, transactionEnvelpoe: string) {
+	public sign(accountAddress: string, transactionEnvelpoe: string) {
 		const keypair = this.getKeyPairFor(accountAddress);
 		if (keypair != null) {
 			const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);

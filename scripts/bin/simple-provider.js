@@ -14,7 +14,7 @@ class SimpleKeystoreProvider {
     get accounts() {
         return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
     }
-    signTransaction(accountAddress, transactionEnvelpoe) {
+    sign(accountAddress, transactionEnvelpoe) {
         const keypair = this.getKeyPairFor(accountAddress);
         if (keypair != null) {
             const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);

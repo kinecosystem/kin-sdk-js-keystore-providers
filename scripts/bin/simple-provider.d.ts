@@ -12,6 +12,6 @@ export declare class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
     constructor(kinSdk: typeof KinSdk, _seed?: string | undefined);
     addKeyPair(): void;
     readonly accounts: Promise<any[]>;
-    signTransaction(accountAddress: string, transactionEnvelpoe: string): Promise<any>;
+    sign(accountAddress: string, transactionEnvelpoe: string): Promise<any>;
     getKeyPairFor(publicAddress: string): KinSdk.KeyPair | null;
 }
