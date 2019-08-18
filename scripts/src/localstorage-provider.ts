@@ -27,10 +27,11 @@ export class BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 			this.updateKeyPairsStorage()
 			console.log('Stored seed NOT found. Generated new seed:\n' + keypair.seed);
 		} else {
-			for (let seed in seeds){
-				console.log('Stored seed found and loaded:\n' + seed);
+			console.log(seeds);
+			seeds.map((seed: string) => {
+				console.log('Stored seed found and loaded: ' + seed);
 				this.addKeyPair(seed)
-			}
+			});
 		}
 	}
 
@@ -41,6 +42,7 @@ export class BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 
 	public addKeyPair(seed: string) {
 		this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
+		this.updateKeyPairsStorage();
 
 	}
 
