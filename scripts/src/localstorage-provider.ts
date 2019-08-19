@@ -8,7 +8,7 @@ declare global{
 
 const KIN_WALLET_STORAGE_INDEX = 'kin_wallet';
 
-export class BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider {
+export class  BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _sdk: typeof KinSdk;
 	private _keypairs: KinSdk.KeyPair[];
 
