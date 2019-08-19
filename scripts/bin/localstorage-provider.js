@@ -1,36 +1,28 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const KIN_WALLET_STORAGE_INDEX = 'kin_wallet';
+const local_storage_handler_1 = require("./libs/local-storage-handler");
+const KIN_WALLET_STORAGE_INDEX = 'kin-wallet';
+const SECRET_KEY = 'my secret key';
 class LocalStorageKeystoreProvider {
     constructor(_sdk) {
         this._sdk = _sdk;
         this._keypairs = new Array();
-        this.getSeedsFromStorage();
-    }
-    getSeedsFromStorage() {
-        let storageString = window.localStorage.getItem(KIN_WALLET_STORAGE_INDEX);
-        let seeds = JSON.parse(storageString || '[]');
-        if (seeds.length == 0) {
-            let keypair = this._sdk.KeyPair.generate();
-            this._keypairs.push(keypair);
-            this.updateSeedsStorage();
-            console.log('Stored seed NOT found. Generated new seed:\n' + keypair.seed);
-        }
-        else {
-            console.log(seeds);
-            seeds.map((seed) => {
-                console.log('Stored seed found and loaded: ' + seed);
-                this.addKeyPair(seed);
-            });
-        }
-    }
-    updateSeedsStorage() {
-        let seeds = this._keypairs.map(keypair => keypair.seed);
-        window.localStorage.setItem(KIN_WALLET_STORAGE_INDEX, JSON.stringify(seeds));
+        this._storage = new local_storage_handler_1.LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, SECRET_KEY);
     }
     addKeyPair(seed) {
-        this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
-        this.updateSeedsStorage();
+        return __awaiter(this, void 0, void 0, function* () {
+            this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
+            let seeds = this._keypairs.map(keypair => keypair.seed);
+            this._storage.set(seeds);
+        });
     }
     get accounts() {
         return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));

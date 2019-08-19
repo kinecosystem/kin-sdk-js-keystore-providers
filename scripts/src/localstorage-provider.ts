@@ -1,4 +1,5 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
+import { LocalStorageHandler } from "./libs/local-storage-handler";
 
 declare global{
 	interface Window {
@@ -6,43 +7,22 @@ declare global{
 	}
 }
 
-const KIN_WALLET_STORAGE_INDEX = 'kin_wallet';
+const KIN_WALLET_STORAGE_INDEX = 'kin-wallet';
+const SECRET_KEY = 'my secret key';
 
-// Before using this 
 export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _keypairs: KinSdk.KeyPair[];
-
+	private _storage: LocalStorageHandler;
+	
 	constructor(private readonly _sdk: typeof KinSdk) {
 		this._keypairs = new Array();
-		this.getSeedsFromStorage();
+		this._storage = new LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, SECRET_KEY);
 	}
 
-	private getSeedsFromStorage(){
-		let storageString = window.localStorage.getItem(KIN_WALLET_STORAGE_INDEX);
-		let seeds = JSON.parse(storageString || '[]');
-		if (seeds.length == 0){
-			let keypair = this._sdk.KeyPair.generate()
-			this._keypairs.push(keypair)
-			this.updateSeedsStorage()
-			console.log('Stored seed NOT found. Generated new seed:\n' + keypair.seed);
-		} else {
-			console.log(seeds);
-			seeds.map((seed: string) => {
-				console.log('Stored seed found and loaded: ' + seed);
-				this.addKeyPair(seed)
-			});
-		}
-	}
-
-	private updateSeedsStorage(){
-		let seeds = this._keypairs.map(keypair => keypair.seed);
-		window.localStorage.setItem(KIN_WALLET_STORAGE_INDEX, JSON.stringify(seeds))
-	}
-
-	public addKeyPair(seed: string) {
+	public async addKeyPair(seed: string) {
 		this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
-		this.updateSeedsStorage();
-
+		let seeds = this._keypairs.map(keypair => keypair.seed);
+		this._storage.set(seeds);
 	}
 
 	get accounts() {
@@ -60,6 +40,5 @@ export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 		} else { return Promise.reject("keypair null"); }
 	}
 }
-
 
 window.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider

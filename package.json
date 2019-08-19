@@ -6,6 +6,7 @@
   "scripts": {
     "transpile": "tsc -p scripts",
     "dev": "webpack -d",
+    "watch": "webpack --watch -d",
     "build": "webpack -p"
   },
   "devDependencies": {
@@ -15,6 +16,8 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
-    "@kinecosystem/kin-sdk-js": "^0.1.10"
+    "@kinecosystem/kin-sdk-js": "^0.1.10",
+    "@types/crypto-js": "^3.1.43",
+    "crypto-js": "^3.1.9-1"
   }
 }
