@@ -1,28 +1,36 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
 
-declare global{
+declare global {
 	interface Window {
-		LocalStorageKeystoreProvider: typeof LocalStorageKeystoreProvider
+		IndexedDbKeystoreProvider: typeof IndexedDbKeystoreProvider
 	}
 }
 
-const KIN_WALLET_STORAGE_INDEX = 'kin_wallet';
+const KIN_WALLET_STORAGE_BUCKET = 'kin_wallet';
 
-// Before using this 
-export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
+export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _sdk: typeof KinSdk;
 	private _keypairs: KinSdk.KeyPair[];
+	private _idb?: IDBDatabase;
 
 	constructor(private readonly kinSdk: typeof KinSdk) {
 		this._sdk = kinSdk;
 		this._keypairs = new Array();
-		this.getSeedsFromStorage();
+		let idb = window.indexedDB.open(KIN_WALLET_STORAGE_BUCKET, 1);
+		idb.onerror = (ev) => {
+			console.error('something is wrong ' + ev);
+		};
+		idb.onsuccess = (ev: any) => {
+			this._idb = ev.target.result;
+			this.getSeedsFromStorage();
+		};
 	}
 
-	private getSeedsFromStorage(){
-		let storageString = window.localStorage.getItem(KIN_WALLET_STORAGE_INDEX);
+	private async getSeedsFromStorage() {
+		console.log('established connection');
+		(this._idb as IDBDatabase).
 		let seeds = JSON.parse(storageString || '[]');
-		if (seeds.length == 0){
+		if (seeds.length == 0) {
 			let keypair = this._sdk.KeyPair.generate()
 			this._keypairs.push(keypair)
 			this.updateSeedsStorage()
@@ -36,22 +44,21 @@ export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 		}
 	}
 
-	private updateSeedsStorage(){
+	private async updateSeedsStorage() {
 		let seeds = this._keypairs.map(keypair => keypair.seed);
 		window.localStorage.setItem(KIN_WALLET_STORAGE_INDEX, JSON.stringify(seeds))
 	}
 
-	public addKeyPair(seed: string) {
+	public async addKeyPair(seed: string) {
 		this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
 		this.updateSeedsStorage();
-
 	}
 
-	get accounts() {
+	get accounts(): Promise<string[]> {
 		return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
 	}
 
-	public sign(accountAddress: string, transactionEnvelpoe: string) {
+	public sign(accountAddress: string, transactionEnvelpoe: string): Promise<string> {
 		const keypair = this._keypairs[0];
 		if (keypair != null) {
 			const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
@@ -64,4 +71,4 @@ export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 }
 
 
-window.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider
+window.IndexedDbKeystoreProvider = IndexedDbKeystoreProvider
