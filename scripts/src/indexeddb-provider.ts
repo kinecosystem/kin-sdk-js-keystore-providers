@@ -1,8 +1,13 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
 
+window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 declare global {
 	interface Window {
 		IndexedDbKeystoreProvider: typeof IndexedDbKeystoreProvider
+		indexedDB: any,
+		mozIndexedDB: any,
+		webkitIndexedDB: any,
+		msIndexedDB: any
 	}
 }
 
@@ -19,7 +24,7 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 	static get _idb(): Promise<IDBDatabase>{
 		return new Promise((resolve, reject) => {
 			let idb = window.indexedDB.open(KIN_WALLET_STORAGE, 1);
-			idb.onerror = (err) => {
+			idb.onerror = (err: any) => {
 				console.error('something is wrong ' + err);
 				reject(err);
 			};
