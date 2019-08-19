@@ -1,16 +1,15 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
 declare global {
     interface Window {
-        BrowserStorageKeystoreProvider: typeof BrowserStorageKeystoreProvider;
+        LocalStorageKeystoreProvider: typeof LocalStorageKeystoreProvider;
     }
 }
-export declare class BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider {
-    private readonly kinSdk;
-    private _sdk;
+export declare class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
+    private readonly _sdk;
     private _keypairs;
-    constructor(kinSdk: typeof KinSdk);
-    private setKeypairs;
-    private updateKeyPairsStorage;
+    constructor(_sdk: typeof KinSdk);
+    private getSeedsFromStorage;
+    private updateSeedsStorage;
     addKeyPair(seed: string): void;
     readonly accounts: Promise<any[]>;
     sign(accountAddress: string, transactionEnvelpoe: string): Promise<any>;

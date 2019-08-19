@@ -10,11 +10,9 @@ const KIN_WALLET_STORAGE_INDEX = 'kin_wallet';
 
 // Before using this 
 export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
-	private _sdk: typeof KinSdk;
 	private _keypairs: KinSdk.KeyPair[];
 
-	constructor(private readonly kinSdk: typeof KinSdk) {
-		this._sdk = kinSdk;
+	constructor(private readonly _sdk: typeof KinSdk) {
 		this._keypairs = new Array();
 		this.getSeedsFromStorage();
 	}
@@ -52,7 +50,7 @@ export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	}
 
 	public sign(accountAddress: string, transactionEnvelpoe: string) {
-		const keypair = this._keypairs[0];
+		const keypair = this._keypairs.find(acc => acc.publicAddress == accountAddress);
 		if (keypair != null) {
 			const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
 			const signers = new Array();
