@@ -2,29 +2,28 @@ import * as KinSdk from "@kinecosystem/kin-sdk-js";
 
 declare global{
 	interface Window {
-		BrowserStorageKeystoreProvider: typeof BrowserStorageKeystoreProvider
+		LocalStorageKeystoreProvider: typeof LocalStorageKeystoreProvider
 	}
 }
 
 const KIN_WALLET_STORAGE_INDEX = 'kin_wallet';
 
-export class  BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider {
-	private _sdk: typeof KinSdk;
+// Before using this 
+export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _keypairs: KinSdk.KeyPair[];
 
-	constructor(private readonly kinSdk: typeof KinSdk) {
-		this._sdk = kinSdk;
+	constructor(private readonly _sdk: typeof KinSdk) {
 		this._keypairs = new Array();
-		this.setKeypairs();
+		this.getSeedsFromStorage();
 	}
 
-	private setKeypairs(){
+	private getSeedsFromStorage(){
 		let storageString = window.localStorage.getItem(KIN_WALLET_STORAGE_INDEX);
 		let seeds = JSON.parse(storageString || '[]');
 		if (seeds.length == 0){
 			let keypair = this._sdk.KeyPair.generate()
 			this._keypairs.push(keypair)
-			this.updateKeyPairsStorage()
+			this.updateSeedsStorage()
 			console.log('Stored seed NOT found. Generated new seed:\n' + keypair.seed);
 		} else {
 			console.log(seeds);
@@ -35,14 +34,14 @@ export class  BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider 
 		}
 	}
 
-	private updateKeyPairsStorage(){
+	private updateSeedsStorage(){
 		let seeds = this._keypairs.map(keypair => keypair.seed);
 		window.localStorage.setItem(KIN_WALLET_STORAGE_INDEX, JSON.stringify(seeds))
 	}
 
 	public addKeyPair(seed: string) {
 		this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
-		this.updateKeyPairsStorage();
+		this.updateSeedsStorage();
 
 	}
 
@@ -51,7 +50,7 @@ export class  BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider 
 	}
 
 	public sign(accountAddress: string, transactionEnvelpoe: string) {
-		const keypair = this._keypairs[0];
+		const keypair = this._keypairs.find(acc => acc.publicAddress == accountAddress);
 		if (keypair != null) {
 			const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
 			const signers = new Array();
@@ -63,4 +62,4 @@ export class  BrowserStorageKeystoreProvider implements KinSdk.KeystoreProvider 
 }
 
 
-window.BrowserStorageKeystoreProvider = BrowserStorageKeystoreProvider
+window.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider

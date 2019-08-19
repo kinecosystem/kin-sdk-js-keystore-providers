@@ -1,6 +1,6 @@
 {
   "name": "@kinecosystem/kin-sdk-js-keystore-providers",
-  "version": "1.0.14",
+  "version": "1.0.17",
   "main": "scripts/bin/index.js",
   "types": "scripts/bin/index.d.ts",
   "scripts": {
@@ -15,6 +15,6 @@
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
-    "@kinecosystem/kin-sdk-js": "^0.1.8"
+    "@kinecosystem/kin-sdk-js": "^0.1.10"
   }
 }

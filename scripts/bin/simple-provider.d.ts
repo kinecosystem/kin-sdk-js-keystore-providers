@@ -5,11 +5,9 @@ declare global {
     }
 }
 export declare class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
-    private readonly kinSdk;
-    private readonly _seed?;
-    private _sdk;
+    private readonly _sdk;
     private _keypairs;
-    constructor(kinSdk: typeof KinSdk, _seed?: string | undefined);
+    constructor(_sdk: typeof KinSdk, _seed?: string);
     addKeyPair(): void;
     readonly accounts: Promise<any[]>;
     sign(accountAddress: string, transactionEnvelpoe: string): Promise<any>;

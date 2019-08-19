@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class SimpleKeystoreProvider {
-    constructor(kinSdk, _seed) {
-        this.kinSdk = kinSdk;
-        this._seed = _seed;
-        this._sdk = kinSdk;
+    constructor(_sdk, _seed) {
+        this._sdk = _sdk;
         this._keypairs = new Array();
         this._keypairs[0] = _seed !== undefined ? this._sdk.KeyPair.fromSeed(_seed) : this._sdk.KeyPair.generate();
     }
@@ -12,7 +10,7 @@ class SimpleKeystoreProvider {
         this._keypairs[this._keypairs.length] = this._sdk.KeyPair.generate();
     }
     get accounts() {
-        return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
+        return Promise.resolve(this._keypairs.map(keypair => keypair.publicAddress));
     }
     sign(accountAddress, transactionEnvelpoe) {
         const keypair = this.getKeyPairFor(accountAddress);
