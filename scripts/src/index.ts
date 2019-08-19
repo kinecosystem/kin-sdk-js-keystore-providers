@@ -1,5 +1,2 @@
- import  {
-    SimpleKeystoreProvider
-} from './simple-provider';
-
-export { SimpleKeystoreProvider };
+export  { SimpleKeystoreProvider} from './simple-provider';
+export { BrowserStorageKeystoreProvider } from './localstorage-provider'
