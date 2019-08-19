@@ -10,9 +10,9 @@ export declare class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvide
     constructor(_sdk: typeof KinSdk);
     static readonly _idb: Promise<IDBDatabase>;
     static onUpgrade(ev: any): void;
-    private setKeypairsFromStorage;
-    private storeKeypairsToStorage;
-    addKeyPair(seed: string): Promise<void>;
+    private loadKeypairsFromStorage;
+    private storeKeypairToStorage;
+    addKeyPair(seed?: string): Promise<void>;
     readonly accounts: Promise<string[]>;
     sign(accountAddress: string, transactionEnvelpoe: string): Promise<string>;
 }
