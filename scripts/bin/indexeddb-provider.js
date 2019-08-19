@@ -8,13 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const KIN_WALLET_STORAGE = 'kin';
+const KIN_WALLET_STORAGE = 'kin-wallets';
 const KIN_WALLET_STORAGE_BUCKET = 'seeds';
 class IndexedDbKeystoreProvider {
     constructor(_sdk) {
         this._sdk = _sdk;
         this._keypairs = new Array();
-        this.setKeypairsFromStorage();
     }
     static get _idb() {
         return new Promise((resolve, reject) => {
@@ -33,52 +32,61 @@ class IndexedDbKeystoreProvider {
     static onUpgrade(ev) {
         console.log('onUpgrade fired');
         let db = ev.target.result;
-        let objectStore = db.createObjectStore(KIN_WALLET_STORAGE_BUCKET, { keyPath: "ssn" });
-        objectStore.createIndex("seed", "seed", { unique: true });
+        db.createObjectStore(KIN_WALLET_STORAGE_BUCKET, { keyPath: "seed" });
     }
-    setKeypairsFromStorage() {
-        return __awaiter(this, void 0, void 0, function* () {
+    loadKeypairsFromStorage() {
+        return new Promise((done) => __awaiter(this, void 0, void 0, function* () {
             let db = yield IndexedDbKeystoreProvider._idb;
             let objectStore = db.transaction(KIN_WALLET_STORAGE_BUCKET).objectStore(KIN_WALLET_STORAGE_BUCKET);
             objectStore.getAll().onsuccess = (ev) => {
-                let seeds = ev.target.result;
-                if (seeds.length == 0) {
-                    let keypair = this._sdk.KeyPair.generate();
-                    this._keypairs.push(keypair);
-                    this.storeKeypairsToStorage();
-                    console.log('Stored seed NOT found. Generated new seed:\n' + keypair.seed);
+                this._keypairs = new Array();
+                let results = ev.target.result;
+                if (results.length == 0) {
+                    console.log('Seed not found');
                 }
                 else {
-                    console.log(seeds);
-                    seeds.map((seed) => {
-                        console.log('Stored seed found and loaded: ' + seed);
-                        this.addKeyPair(seed);
+                    results.map((result) => {
+                        console.log('found stored seed. loading: ' + result.seed);
+                        this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(result.seed);
                     });
                 }
             };
-            db.close();
-        });
+            objectStore.transaction.oncomplete = () => {
+                console.log('connection closed');
+                db.close();
+                done();
+            };
+            objectStore.transaction.onerror = (err) => {
+                console.log('transaction error ' + err);
+                db.close();
+            };
+        }));
     }
-    storeKeypairsToStorage() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let seeds = this._keypairs.map(keypair => keypair.seed);
+    storeKeypairToStorage(keypair) {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
             let db = yield IndexedDbKeystoreProvider._idb;
             let objectStore = db.transaction(KIN_WALLET_STORAGE_BUCKET, "readwrite").objectStore(KIN_WALLET_STORAGE_BUCKET);
-            seeds.map(seed => {
-                console.log('Storing seed: ' + seed);
-                objectStore.add(seed);
-            });
-            db.close();
-        });
+            objectStore.add({ seed: keypair.seed });
+            objectStore.transaction.oncomplete = () => {
+                console.log('connection closed');
+                db.close();
+                resolve();
+            };
+        }));
     }
     addKeyPair(seed) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
-            this.storeKeypairsToStorage();
+            let newKeyPair = seed === undefined ? this._sdk.KeyPair.generate() : this._sdk.KeyPair.fromSeed(seed);
+            this._keypairs[this._keypairs.length] = newKeyPair;
+            yield this.storeKeypairToStorage(newKeyPair);
         });
     }
     get accounts() {
-        return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            console.log('loading keys into memory');
+            yield this.loadKeypairsFromStorage();
+            resolve(this._keypairs.map(keypair => keypair.publicAddress));
+        }));
     }
     sign(accountAddress, transactionEnvelpoe) {
         const keypair = this._keypairs.find(acc => acc.publicAddress == accountAddress);

@@ -10,7 +10,7 @@ class SimpleKeystoreProvider {
         this._keypairs[this._keypairs.length] = this._sdk.KeyPair.generate();
     }
     get accounts() {
-        return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
+        return Promise.resolve(this._keypairs.map(keypair => keypair.publicAddress));
     }
     sign(accountAddress, transactionEnvelpoe) {
         const keypair = this.getKeyPairFor(accountAddress);

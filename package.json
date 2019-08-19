@@ -1,6 +1,6 @@
 {
   "name": "@kinecosystem/kin-sdk-js-keystore-providers",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "main": "scripts/bin/index.js",
   "types": "scripts/bin/index.d.ts",
   "scripts": {
