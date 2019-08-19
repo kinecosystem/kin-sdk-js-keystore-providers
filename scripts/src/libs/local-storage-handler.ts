@@ -1,4 +1,4 @@
-import { AES, SHA256, enc } from 'crypto-js';
+import { AES, enc } from 'crypto-js';
 
 export class LocalStorageHandler {
     private _storage: any;
