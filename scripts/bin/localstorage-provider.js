@@ -1,41 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const KIN_WALLET_STORAGE_INDEX = 'kin_wallet';
-class BrowserStorageKeystoreProvider {
-    constructor(kinSdk) {
-        this.kinSdk = kinSdk;
-        this._sdk = kinSdk;
+class LocalStorageKeystoreProvider {
+    constructor(_sdk) {
+        this._sdk = _sdk;
         this._keypairs = new Array();
-        this.setKeypairs();
+        this.getSeedsFromStorage();
     }
-    setKeypairs() {
+    getSeedsFromStorage() {
         let storageString = window.localStorage.getItem(KIN_WALLET_STORAGE_INDEX);
         let seeds = JSON.parse(storageString || '[]');
         if (seeds.length == 0) {
             let keypair = this._sdk.KeyPair.generate();
             this._keypairs.push(keypair);
-            this.updateKeyPairsStorage();
+            this.updateSeedsStorage();
             console.log('Stored seed NOT found. Generated new seed:\n' + keypair.seed);
         }
         else {
-            for (let seed in seeds) {
-                console.log('Stored seed found and loaded:\n' + seed);
+            console.log(seeds);
+            seeds.map((seed) => {
+                console.log('Stored seed found and loaded: ' + seed);
                 this.addKeyPair(seed);
-            }
+            });
         }
     }
-    updateKeyPairsStorage() {
+    updateSeedsStorage() {
         let seeds = this._keypairs.map(keypair => keypair.seed);
         window.localStorage.setItem(KIN_WALLET_STORAGE_INDEX, JSON.stringify(seeds));
     }
     addKeyPair(seed) {
         this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
+        this.updateSeedsStorage();
     }
     get accounts() {
         return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
     }
     sign(accountAddress, transactionEnvelpoe) {
-        const keypair = this._keypairs[0];
+        const keypair = this._keypairs.find(acc => acc.publicAddress == accountAddress);
         if (keypair != null) {
             const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
             const signers = new Array();
@@ -48,6 +49,6 @@ class BrowserStorageKeystoreProvider {
         }
     }
 }
-exports.BrowserStorageKeystoreProvider = BrowserStorageKeystoreProvider;
-window.BrowserStorageKeystoreProvider = BrowserStorageKeystoreProvider;
+exports.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider;
+window.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider;
 //# sourceMappingURL=localstorage-provider.js.map

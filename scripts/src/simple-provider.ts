@@ -7,11 +7,9 @@ declare global{
 }
 
 export  class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
-	private _sdk: typeof KinSdk;
 	private _keypairs: KinSdk.KeyPair[];
 
-	constructor(private readonly kinSdk: typeof KinSdk, private readonly _seed?: string) {
-		this._sdk = kinSdk;
+	constructor(private readonly _sdk: typeof KinSdk, _seed?: string) {
 		this._keypairs = new Array();
 		this._keypairs[0] = _seed !== undefined ? this._sdk.KeyPair.fromSeed(_seed) : this._sdk.KeyPair.generate();
 	}
@@ -21,7 +19,7 @@ export  class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
 	}
 
 	get accounts() {
-		return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
+		return Promise.resolve(this._keypairs.map(keypair => keypair.publicAddress));
 	}
 
 	public sign(accountAddress: string, transactionEnvelpoe: string) {
