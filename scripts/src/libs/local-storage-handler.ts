@@ -1,49 +1,52 @@
 import { AES, enc } from 'crypto-js';
 
 export class LocalStorageHandler {
-    private _storage: any;
+    private _storage: Array<string>;
 
-    constructor(private readonly _key: string, private readonly _secret: string){}
+    constructor(private readonly _key: string, private readonly _secret: string){
+        this._storage = [];
+    }
 
     /**
      * refresh local _storage object with data from localStorage
      */
-    private async refresh() {
+    private refresh() {
         let storageString = window.localStorage.getItem(this._key);
-        let decrypted = storageString == null ? '[]' : await this.decrypt(storageString);
-        this._storage = JSON.parse(decrypted);
-        console.log('decrypted seeds: ' + this._storage);
+        let seeds: Array<string> = JSON.parse(storageString || '[]');
+        this._storage = seeds.map(seed => this.decrypt(seed))
     }
 
     /**
      * remove kin key from localStorage
      */
     public clear() {
+        this._storage = []
         window.localStorage.removeItem(this._key);
     }
 
     /**
      * get seeds from _storage
      */
-    public async get() {
+    public get() {
         //  refresh _storage before getting it
-        await this.refresh();
+        this.refresh();
         return this._storage;
     }
 
     /**
      * @param value save new seed to localStorage 
      */
-    public async set(value: Array<string>) {
-        let string = JSON.stringify(value)
-        window.localStorage.setItem(this._key, await this.encrypt(string));
+    public add(seed: string){
+        this._storage.push(seed)
+        let encrypted = this._storage.map(seed => this.encrypt(seed));
+        window.localStorage.setItem(this._key, JSON.stringify(encrypted));
     }
 
     private encrypt(value: string) {
-        return Promise.resolve(AES.encrypt(value, this._secret).toString());
+        return AES.encrypt(value, this._secret).toString();
     }
 
     private decrypt(value: string) {
-        return Promise.resolve(AES.decrypt(value, this._secret).toString(enc.Utf8));
+        return AES.decrypt(value, this._secret).toString(enc.Utf8);
     }
 }

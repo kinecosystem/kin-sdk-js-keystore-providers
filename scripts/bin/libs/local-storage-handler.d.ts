@@ -5,8 +5,8 @@ export declare class LocalStorageHandler {
     constructor(_key: string, _secret: string);
     private refresh;
     clear(): void;
-    get(): Promise<any>;
-    set(value: Array<string>): Promise<void>;
+    get(): string[];
+    add(seed: string): void;
     private encrypt;
     private decrypt;
 }

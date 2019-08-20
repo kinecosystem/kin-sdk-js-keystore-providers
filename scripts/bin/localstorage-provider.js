@@ -14,31 +14,38 @@ const SECRET_KEY = 'my secret key';
 class LocalStorageKeystoreProvider {
     constructor(_sdk) {
         this._sdk = _sdk;
-        this._keypairs = new Array();
         this._storage = new local_storage_handler_1.LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, SECRET_KEY);
     }
     addKeyPair(seed) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(seed);
-            let seeds = this._keypairs.map(keypair => keypair.seed);
-            this._storage.set(seeds);
-        });
+        if (seed == undefined)
+            this._storage.add(this._sdk.KeyPair.generate().seed);
+        else
+            this._storage.add(seed);
     }
     get accounts() {
-        return Promise.resolve(this._keypairs.map(keypay => keypay.publicAddress));
+        let seeds = this._storage.get();
+        let accounts = seeds.map(seed => this._sdk.KeyPair.fromSeed(seed).publicAddress);
+        return Promise.resolve(accounts);
     }
     sign(accountAddress, transactionEnvelpoe) {
-        const keypair = this._keypairs.find(acc => acc.publicAddress == accountAddress);
-        if (keypair != null) {
-            const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
-            const signers = new Array();
-            signers.push(this._sdk.BaseKeyPair.fromSecret(keypair.seed));
-            tx.sign(...signers);
-            return Promise.resolve(tx.toEnvelope().toXDR("base64").toString());
-        }
-        else {
-            return Promise.reject("keypair null");
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            let seeds = yield this._storage.get();
+            const seed = seeds.find(seed => {
+                let tmpAcc = this._sdk.KeyPair.fromSeed(seed);
+                if (accountAddress == tmpAcc.publicAddress)
+                    return seed;
+            });
+            if (seed != null) {
+                const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
+                const signers = new Array();
+                signers.push(this._sdk.BaseKeyPair.fromSecret(seed));
+                tx.sign(...signers);
+                return Promise.resolve(tx.toEnvelope().toXDR("base64").toString());
+            }
+            else {
+                return Promise.reject("keypair null");
+            }
+        });
     }
 }
 exports.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider;

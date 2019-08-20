@@ -6,10 +6,9 @@ declare global {
 }
 export declare class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
     private readonly _sdk;
-    private _keypairs;
     private _storage;
     constructor(_sdk: typeof KinSdk);
-    addKeyPair(seed: string): Promise<void>;
+    addKeyPair(seed: string): void;
     readonly accounts: Promise<any[]>;
     sign(accountAddress: string, transactionEnvelpoe: string): Promise<any>;
 }
