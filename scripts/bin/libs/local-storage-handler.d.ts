@@ -1,11 +1,12 @@
 export declare class LocalStorageHandler {
     private readonly _key;
-    private readonly _secret;
     private _storage;
-    constructor(_key: string, _secret: string);
+    private readonly _secret;
+    constructor(_key: string, secret: string);
     private refresh;
     clear(): void;
     get(): string[];
+    private hash;
     add(seed: string): void;
     private encrypt;
     private decrypt;

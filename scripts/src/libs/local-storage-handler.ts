@@ -1,10 +1,12 @@
-import { AES, enc } from 'crypto-js';
+import { AES, SHA256, enc } from 'crypto-js';
 
 export class LocalStorageHandler {
     private _storage: Array<string>;
+    private readonly _secret: string;
 
-    constructor(private readonly _key: string, private readonly _secret: string){
+    constructor(private readonly _key: string, secret: string){
         this._storage = [];
+        this._secret = this.hash(secret);
     }
 
     /**
@@ -31,6 +33,10 @@ export class LocalStorageHandler {
         //  refresh _storage before getting it
         this.refresh();
         return this._storage;
+    }
+
+    private hash(secret: string){
+        return SHA256(secret).toString()
     }
 
     /**

@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto_js_1 = require("crypto-js");
 class LocalStorageHandler {
-    constructor(_key, _secret) {
+    constructor(_key, secret) {
         this._key = _key;
-        this._secret = _secret;
         this._storage = [];
+        this._secret = this.hash(secret);
     }
     refresh() {
         let storageString = window.localStorage.getItem(this._key);
@@ -19,6 +19,9 @@ class LocalStorageHandler {
     get() {
         this.refresh();
         return this._storage;
+    }
+    hash(secret) {
+        return crypto_js_1.SHA256(secret).toString();
     }
     add(seed) {
         this._storage.push(seed);
