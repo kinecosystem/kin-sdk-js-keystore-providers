@@ -1,3 +1,4 @@
-export { SimpleKeystoreProvider } from './simple-provider';
-export { LocalStorageKeystoreProvider } from './localstorage-provider';
-export { IndexedDbKeystoreProvider } from './indexeddb-provider';
+import { SimpleKeystoreProvider } from './simple-provider';
+import { LocalStorageKeystoreProvider } from './localstorage-provider';
+import { IndexedDbKeystoreProvider } from './indexeddb-provider';
+export { SimpleKeystoreProvider, LocalStorageKeystoreProvider, IndexedDbKeystoreProvider };
