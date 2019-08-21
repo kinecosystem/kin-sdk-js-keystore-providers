@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 const KIN_WALLET_STORAGE = 'kin-wallets';
 const KIN_WALLET_STORAGE_BUCKET = 'seeds';
 class IndexedDbKeystoreProvider {
