@@ -10,11 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const local_storage_handler_1 = require("./libs/local-storage-handler");
 const KIN_WALLET_STORAGE_INDEX = 'kin-wallet';
-const SECRET_KEY = 'my secret key';
 class LocalStorageKeystoreProvider {
-    constructor(_sdk) {
+    constructor(_sdk, secret) {
         this._sdk = _sdk;
-        this._storage = new local_storage_handler_1.LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, SECRET_KEY);
+        this._storage = new local_storage_handler_1.LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, secret);
     }
     addKeyPair(seed) {
         if (seed == undefined)

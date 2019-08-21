@@ -8,13 +8,12 @@ declare global{
 }
 
 const KIN_WALLET_STORAGE_INDEX = 'kin-wallet';
-const SECRET_KEY = 'my secret key';
 
 export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _storage: LocalStorageHandler;
 	
-	constructor(private readonly _sdk: typeof KinSdk) {
-		this._storage = new LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, SECRET_KEY);
+	constructor(private readonly _sdk: typeof KinSdk, secret: string) {
+		this._storage = new LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, secret);
 	}
 
 	public addKeyPair(seed: string) {
