@@ -2,7 +2,7 @@ import * as KinSdk from "@kinecosystem/kin-sdk-js";
 
 declare global{
 	interface Window {
-		SimpleKeystoreProvider: typeof SimpleKeystoreProvider
+		KeystoreProvider: any
 	}
 }
 
@@ -39,4 +39,4 @@ export  class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
 }
 
 
-window.SimpleKeystoreProvider = SimpleKeystoreProvider
+window.KeystoreProvider = SimpleKeystoreProvider

@@ -3,7 +3,7 @@ import { LocalStorageHandler } from "./libs/local-storage-handler";
 
 declare global{
 	interface Window {
-		LocalStorageKeystoreProvider: typeof LocalStorageKeystoreProvider
+		KeystoreProvider: any
 	}
 }
 
@@ -47,4 +47,4 @@ export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	}
 }
 
-window.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider
+window.KeystoreProvider = LocalStorageKeystoreProvider

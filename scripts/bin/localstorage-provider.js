@@ -49,5 +49,5 @@ class LocalStorageKeystoreProvider {
     }
 }
 exports.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider;
-window.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider;
+window.KeystoreProvider = LocalStorageKeystoreProvider;
 //# sourceMappingURL=localstorage-provider.js.map

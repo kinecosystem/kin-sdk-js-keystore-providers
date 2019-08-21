@@ -30,5 +30,5 @@ class SimpleKeystoreProvider {
     }
 }
 exports.SimpleKeystoreProvider = SimpleKeystoreProvider;
-window.SimpleKeystoreProvider = SimpleKeystoreProvider;
+window.KeystoreProvider = SimpleKeystoreProvider;
 //# sourceMappingURL=simple-provider.js.map

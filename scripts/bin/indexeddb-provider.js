@@ -104,5 +104,5 @@ class IndexedDbKeystoreProvider {
     }
 }
 exports.IndexedDbKeystoreProvider = IndexedDbKeystoreProvider;
-window.IndexedDbKeystoreProvider = IndexedDbKeystoreProvider;
+window.KeystoreProvider = IndexedDbKeystoreProvider;
 //# sourceMappingURL=indexeddb-provider.js.map

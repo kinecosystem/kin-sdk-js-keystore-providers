@@ -1,7 +1,7 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
 declare global {
     interface Window {
-        LocalStorageKeystoreProvider: typeof LocalStorageKeystoreProvider;
+        KeystoreProvider: any;
     }
 }
 export declare class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
