@@ -53,13 +53,13 @@ export abstract class EncryptedStorageProvider  {
 	async get(pkey: string, secret: string): Promise<IKeyStore> {
 		const local = this._cachedKinAccounts[pkey];
 		if(local) {
-			return Promise.resolve(this._cryptoProvider.decrypt(local, secret));
+			return await this._cryptoProvider.decrypt(local, secret);
 		}
 
 		const remote = await this.getHandler(pkey);
 		this._cachedKinAccounts[pkey] = remote;
 
-		return this._cryptoProvider.decrypt(remote, secret);
+		return await this._cryptoProvider.decrypt(remote, secret);
 	}
 
 
