@@ -10,7 +10,7 @@ export  class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _keypairs: KinSdk.KeyPair[];
 
 	constructor(private readonly _sdk: typeof KinSdk, _seed?: string) {
-		this._keypairs = new Array();
+		this._keypairs = [];
 		this._keypairs[0] = _seed !== undefined ? this._sdk.KeyPair.fromSeed(_seed) : this._sdk.KeyPair.generate();
 	}
 
@@ -26,7 +26,7 @@ export  class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
 		const keypair = this.getKeyPairFor(accountAddress);
 		if (keypair != null) {
 			const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
-			const signers = new Array();
+			const signers = [];
 			signers.push(this._sdk.BaseKeyPair.fromSecret(keypair.seed));
 			tx.sign(...signers);
 			return Promise.resolve(tx.toEnvelope().toXDR("base64").toString());
@@ -39,4 +39,4 @@ export  class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
 }
 
 
-window.SimpleKeystoreProvider = SimpleKeystoreProvider
+window.SimpleKeystoreProvider = SimpleKeystoreProvider;

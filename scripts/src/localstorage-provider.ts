@@ -12,7 +12,7 @@ const SECRET_KEY = 'my secret key';
 
 export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _storage: LocalStorageHandler;
-	
+
 	constructor(private readonly _sdk: typeof KinSdk) {
 		this._storage = new LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, SECRET_KEY);
 	}
@@ -25,21 +25,22 @@ export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	}
 
 	get accounts() {
-		let seeds = this._storage.get()
-		let accounts = seeds.map(seed => this._sdk.KeyPair.fromSeed(seed).publicAddress)
+		let seeds = this._storage.get();
+		let accounts = seeds.map(seed => this._sdk.KeyPair.fromSeed(seed).publicAddress);
 		return Promise.resolve(accounts)
 	}
 
 	public async sign(accountAddress: string, transactionEnvelpoe: string) {
 		let seeds = await this._storage.get();
+
 		const seed = seeds.find(seed => {
 			let tmpAcc = this._sdk.KeyPair.fromSeed(seed);
-			if (accountAddress == tmpAcc.publicAddress) 
-				return seed;
+			return accountAddress == tmpAcc.publicAddress
 		});
+
 		if (seed != null) {
 			const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
-			const signers = new Array();
+			const signers = [];
 			signers.push(this._sdk.BaseKeyPair.fromSecret(seed));
 			tx.sign(...signers);
 			return Promise.resolve(tx.toEnvelope().toXDR("base64").toString());
@@ -47,4 +48,4 @@ export class LocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
 	}
 }
 
-window.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider
+window.LocalStorageKeystoreProvider = LocalStorageKeystoreProvider;

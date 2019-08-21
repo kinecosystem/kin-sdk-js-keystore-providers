@@ -6,7 +6,7 @@ export class LocalStorageHandler {
 
     constructor(private readonly _key: string, secret: string){
         this._storage = [];
-        this._secret = this.hash(secret);
+        this._secret = LocalStorageHandler.hash(secret);
     }
 
     /**
@@ -22,7 +22,7 @@ export class LocalStorageHandler {
      * remove kin key from localStorage
      */
     public clear() {
-        this._storage = []
+        this._storage = [];
         window.localStorage.removeItem(this._key);
     }
 
@@ -35,15 +35,15 @@ export class LocalStorageHandler {
         return this._storage;
     }
 
-    private hash(secret: string){
+    private static hash(secret: string){
         return SHA256(secret).toString()
     }
 
     /**
-     * @param value save new seed to localStorage 
+     * @param seed
      */
     public add(seed: string){
-        this._storage.push(seed)
+        this._storage.push(seed);
         let encrypted = this._storage.map(seed => this.encrypt(seed));
         window.localStorage.setItem(this._key, JSON.stringify(encrypted));
     }
