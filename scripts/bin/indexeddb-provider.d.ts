@@ -2,6 +2,7 @@ import * as KinSdk from "@kinecosystem/kin-sdk-js";
 declare global {
     interface Window {
         IndexedDbKeystoreProvider: typeof IndexedDbKeystoreProvider;
+        idb: any;
         indexedDB: any;
         mozIndexedDB: any;
         webkitIndexedDB: any;

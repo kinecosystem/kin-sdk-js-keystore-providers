@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+window.idb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 const KIN_WALLET_STORAGE = 'kin-wallets';
 const KIN_WALLET_STORAGE_BUCKET = 'seeds';
 class IndexedDbKeystoreProvider {
@@ -18,7 +18,7 @@ class IndexedDbKeystoreProvider {
     }
     static get _idb() {
         return new Promise((resolve, reject) => {
-            let idb = window.indexedDB.open(KIN_WALLET_STORAGE, 1);
+            let idb = window.idb.open(KIN_WALLET_STORAGE, 1);
             idb.onerror = (err) => {
                 console.error('something is wrong ' + err);
                 reject(err);
