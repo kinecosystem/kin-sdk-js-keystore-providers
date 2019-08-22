@@ -1,9 +1,10 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
 
-window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+window.idb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 declare global {
 	interface Window {
 		IndexedDbKeystoreProvider: typeof IndexedDbKeystoreProvider
+		idb: any
 		indexedDB: any,
 		mozIndexedDB: any,
 		webkitIndexedDB: any,
@@ -23,7 +24,7 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 
 	static get _idb(): Promise<IDBDatabase>{
 		return new Promise((resolve, reject) => {
-			let idb = window.indexedDB.open(KIN_WALLET_STORAGE, 1);
+			let idb = window.idb.open(KIN_WALLET_STORAGE, 1);
 			idb.onerror = (err: any) => {
 				console.error('something is wrong ' + err);
 				reject(err);
@@ -111,6 +112,5 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 		} else { return Promise.reject("keypair null"); }
 	}
 }
-
 
 window.IndexedDbKeystoreProvider = IndexedDbKeystoreProvider;
