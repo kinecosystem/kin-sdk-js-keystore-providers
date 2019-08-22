@@ -1,5 +1,5 @@
-import { DefaultKeyStoreCryptoProvider, IKeyStoreCryptoProvider } from "./CryptoProvider";
-import { IKeyStore, KeyStore, KeyStoreType } from "./KeyStore";
+import { DefaultKeyStoreCryptoProvider, IKeyStoreCryptoProvider } from "../libs/CryptoProvider";
+import { IKeyStore, KeyStore, KeyStoreType } from "../libs/KeyStore";
 import * as KinSdk  from "@kinecosystem/kin-sdk-js";
 
 interface KinAccounts {
@@ -67,4 +67,3 @@ export abstract class EncryptedStorageProvider  {
 	protected abstract removeHandler(keyStore: IKeyStore): Promise<boolean>
 	protected abstract getHandler(publicAddress: string): Promise<IKeyStore>
 }
-

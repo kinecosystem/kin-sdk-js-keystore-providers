@@ -3,7 +3,7 @@ import * as KinSdk from "@kinecosystem/kin-sdk-js";
 window.idb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 declare global {
 	interface Window {
-		IndexedDbKeystoreProvider: typeof IndexedDbKeystoreProvider
+		SimpleIndexedDbKeystoreProvider: typeof SimpleIndexedDbKeystoreProvider
 		idb: any
 		indexedDB: any,
 		mozIndexedDB: any,
@@ -15,7 +15,7 @@ declare global {
 const KIN_WALLET_STORAGE = 'kin-wallets';
 const KIN_WALLET_STORAGE_BUCKET = 'seeds';
 
-export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
+export class SimpleIndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _keypairs: KinSdk.KeyPair[];
 
 	constructor(private readonly _sdk: typeof KinSdk) {
@@ -45,7 +45,7 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 
 	private loadKeypairsFromStorage() {
 		return new Promise(async done => {
-			let db = await IndexedDbKeystoreProvider._idb;
+			let db = await SimpleIndexedDbKeystoreProvider._idb;
 			let objectStore = db.transaction(KIN_WALLET_STORAGE_BUCKET).objectStore(KIN_WALLET_STORAGE_BUCKET);
 			
 			objectStore.getAll().onsuccess = (ev: any) => {
@@ -76,7 +76,7 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 
 	private storeKeypairToStorage(keypair: KinSdk.KeyPair){
 		return new Promise(async resolve => {
-			let db = await IndexedDbKeystoreProvider._idb;
+			let db = await SimpleIndexedDbKeystoreProvider._idb;
 			let objectStore = db.transaction(KIN_WALLET_STORAGE_BUCKET, "readwrite").objectStore(KIN_WALLET_STORAGE_BUCKET);
 			objectStore.add({seed: keypair.seed});
 			objectStore.transaction.oncomplete = () => {
@@ -113,4 +113,4 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 	}
 }
 
-window.IndexedDbKeystoreProvider = IndexedDbKeystoreProvider;
+window.SimpleIndexedDbKeystoreProvider = SimpleIndexedDbKeystoreProvider;

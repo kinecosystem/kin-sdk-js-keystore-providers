@@ -1,6 +1,6 @@
-import { EncryptedStorageProvider } from "./libs/EncryptedStorageProvider";
-import { IKeyStore } from "./libs/KeyStore";
-import { getIndex } from "./utils";
+import { EncryptedStorageProvider } from "./EncryptedStorageProvider";
+import { IKeyStore } from "../libs/KeyStore";
+import { getIndex } from "../libs/utils";
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
 
 
