@@ -3,7 +3,7 @@ import * as KinSdk from "@kinecosystem/kin-sdk-js";
 window.idb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 declare global {
 	interface Window {
-		KeystoreProvider: any
+		SimpleIndexedDbKeystoreProvider: typeof SimpleIndexedDbKeystoreProvider
 		idb: any
 		indexedDB: any,
 		mozIndexedDB: any,
@@ -15,11 +15,11 @@ declare global {
 const KIN_WALLET_STORAGE = 'kin-wallets';
 const KIN_WALLET_STORAGE_BUCKET = 'seeds';
 
-export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
+export class SimpleIndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 	private _keypairs: KinSdk.KeyPair[];
 
 	constructor(private readonly _sdk: typeof KinSdk) {
-		this._keypairs = new Array();
+		this._keypairs = [];
 	}
 
 	static get _idb(): Promise<IDBDatabase>{
@@ -45,10 +45,11 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 
 	private loadKeypairsFromStorage() {
 		return new Promise(async done => {
-			let db = await IndexedDbKeystoreProvider._idb
-			let objectStore = db.transaction(KIN_WALLET_STORAGE_BUCKET).objectStore(KIN_WALLET_STORAGE_BUCKET)
+			let db = await SimpleIndexedDbKeystoreProvider._idb;
+			let objectStore = db.transaction(KIN_WALLET_STORAGE_BUCKET).objectStore(KIN_WALLET_STORAGE_BUCKET);
+			
 			objectStore.getAll().onsuccess = (ev: any) => {
-				this._keypairs = new Array();
+				this._keypairs = [];
 				let results = ev.target.result;
 				if (results.length == 0) {
 					console.log('Seed not found');
@@ -58,12 +59,14 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 						this._keypairs[this._keypairs.length] = this._sdk.KeyPair.fromSeed(result.seed)
 					});
 				}
-			}
+			};
+
 			objectStore.transaction.oncomplete = () => {
 				console.log('connection closed');
 				db.close();
 				done();
-			}
+			};
+
 			objectStore.transaction.onerror = (err) => {
 				console.log('transaction error ' + err);
 				db.close();
@@ -73,8 +76,8 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 
 	private storeKeypairToStorage(keypair: KinSdk.KeyPair){
 		return new Promise(async resolve => {
-			let db = await IndexedDbKeystoreProvider._idb
-			let objectStore = db.transaction(KIN_WALLET_STORAGE_BUCKET, "readwrite").objectStore(KIN_WALLET_STORAGE_BUCKET)
+			let db = await SimpleIndexedDbKeystoreProvider._idb;
+			let objectStore = db.transaction(KIN_WALLET_STORAGE_BUCKET, "readwrite").objectStore(KIN_WALLET_STORAGE_BUCKET);
 			objectStore.add({seed: keypair.seed});
 			objectStore.transaction.oncomplete = () => {
 				console.log('connection closed');
@@ -102,7 +105,7 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 		const keypair = this._keypairs.find(acc => acc.publicAddress == accountAddress);
 		if (keypair != null) {
 			const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
-			const signers = new Array();
+			const signers = [];
 			signers.push(this._sdk.BaseKeyPair.fromSecret(keypair.seed));
 			tx.sign(...signers);
 			return Promise.resolve(tx.toEnvelope().toXDR("base64").toString());
@@ -110,5 +113,4 @@ export class IndexedDbKeystoreProvider implements KinSdk.KeystoreProvider {
 	}
 }
 
-
-window.KeystoreProvider = IndexedDbKeystoreProvider
+window.SimpleIndexedDbKeystoreProvider = SimpleIndexedDbKeystoreProvider;

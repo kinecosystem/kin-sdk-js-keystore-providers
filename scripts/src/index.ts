@@ -1,9 +1,5 @@
-import { SimpleKeystoreProvider} from './simple-provider';
-import { LocalStorageKeystoreProvider } from './localstorage-provider'
-import { IndexedDbKeystoreProvider } from './indexeddb-provider'
-
-export {
-    SimpleKeystoreProvider,
-    LocalStorageKeystoreProvider,
-    IndexedDbKeystoreProvider
-}
+export  { SimpleKeystoreProvider} from './simple-provider';
+export { SimpleLocalStorageKeystoreProvider } from './simple-localstorage-provider'
+export { SimpleIndexedDbKeystoreProvider } from './simple-indexeddb-provider'
+export { EncryptedLocalStorageProvider } from './encrypted-localstorage-provider'
+export { EncryptedRemoteStorageProvider } from './encrypted-remotestorage-provider'
