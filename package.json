@@ -1,22 +1,25 @@
 {
-  "name": "@kinecosystem/kin-sdk-js-keystore-providers",
-  "version": "1.0.26",
-  "main": "scripts/bin/index.js",
-  "types": "scripts/bin/index.d.ts",
-  "scripts": {
-    "transpile": "tsc -p scripts",
-    "dev": "webpack -d",
-    "watch": "webpack --watch -d",
-    "build": "webpack -p"
-  },
-  "devDependencies": {
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.3.4000",
-    "webpack": "^4.37.0",
-    "webpack-cli": "^3.3.6",
-    "@kinecosystem/kin-sdk-js": "^0.1.10"
-  },
-  "dependencies": {
-    "libsodium-wrappers": "^0.7.5"
-  }
+    "name": "@kinecosystem/kin-sdk-js-keystore-providers",
+    "version": "1.0.26",
+    "main": "scripts/bin/index.js",
+    "types": "scripts/bin/index.d.ts",
+    "scripts": {
+        "transpile": "tsc -p scripts",
+        "dev": "webpack -d",
+        "watch": "webpack --watch -d",
+        "build": "webpack -p",
+        "start": "webpack --watch -d & live-server"
+    },
+    "devDependencies": {
+        "@kinecosystem/kin-sdk-js": "^0.1.10",
+        "live-server": "^1.2.1",
+        "ts-loader": "^6.0.4",
+        "typescript": "^3.3.4000",
+        "webpack": "^4.37.0",
+        "webpack-cli": "^3.3.6"
+    },
+    "dependencies": {
+        "@types/chrome": "0.0.88",
+        "libsodium-wrappers": "^0.7.5"
+    }
 }

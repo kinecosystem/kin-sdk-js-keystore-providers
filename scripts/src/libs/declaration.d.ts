@@ -1,1 +1,1 @@
-declare module 'libsodium-wrappers';
+declare module "libsodium-wrappers";
