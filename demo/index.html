@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Extention Demo App</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+
+  <body>
+    <div class="container mt-4" id="root">
+      <div class="row">
+        <div class="card col-3">
+          <img src="https://www.dogshopnw.com/wp-content/uploads/2016/01/doggroomingvancouverwa-funfacts-200x200.jpg" class="card-img-top" />
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <button type="button" class="btn btn-primary" @click="tipSomeone">
+              Tip Someone
+            </button>
+          </div>
+        </div>
+        <div class="col-sm" id="status">
+          <h3>LocalStorage Account</h3>
+          <ul class="list-group">
+            <li class="list-group-item" v-for="account in accounts">{{ account._publicAddress }} : {{ account.balance }}</li>
+          </ul>
+          <button type="button" class="btn btn-primary" @click="createLocalStorageAccount">
+            Add fixed address to LocalStorage
+          </button>
+          <button type="button" class="btn btn-primary" @click="installExtension">
+            Install Extension (set cookie)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../dist/extension-provider.js"></script>
+    <script src="./kin-sdk.js"></script>
+    <script defer src="./app.js"></script>
+  </body>
+</html>
