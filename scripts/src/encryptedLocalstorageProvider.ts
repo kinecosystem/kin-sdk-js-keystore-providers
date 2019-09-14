@@ -1,5 +1,5 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
-import { LocalStorageProvider } from "./EncryptedStorageProviders/LocalStorageProvider";
+import { LocalStorageProvider } from "./encryptedStorageProviders/eocalStorageProvider";
 
 declare global {
   interface Window {

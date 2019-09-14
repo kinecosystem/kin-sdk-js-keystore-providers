@@ -6,6 +6,8 @@ const keyStoreProvider = new ExtensionKeystoreProvider(KinSdk);
 const kinClient = new KinSdk.KinClient(KinSdk.Environment.Testnet, keyStoreProvider);
 
 Vue.config.productionTip = false;
+Vue.config.devtools = false;
+
 new Vue({
   el: "#root",
   data: {
@@ -47,25 +49,26 @@ new Vue({
         fee: 100,
         memoText: "Tip some kin"
       });
-      console.log("client: tip -> builder");
+      console.log("client: tip -> builder done");
       await this.accounts[0].submitTransaction(txBuilder.toString());
       console.log("client: tip -> refresh balance");
       this.refreshBalances();
     },
     refreshBalances: async function() {
-      for (let account in this.accounts) {
+      for (let account of this.accounts) {
         const balance = await account.getBalance();
         account.balance = balance;
       }
     },
     activateAccounts: async function() {
-      for (let account in this.accounts) {
-        const isAccountExisting = await account.isAccountExisting();
-        if (!exists) {
-          kinClient.friendbot({
+      for (let account of this.accounts) {
+        if (!(await account.isAccountExisting())) {
+          await kinClient.friendbot({
             address: account._publicAddress,
             amount: 1000
           });
+
+          this.refreshBalances();
         }
       }
     }

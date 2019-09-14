@@ -1,5 +1,5 @@
-import { EncryptedStorageProvider } from "./EncryptedStorageProvider";
-import { IKeyStore } from "../libs/KeyStore";
+import { EncryptedStorageProvider } from "./encryptedStorageProvider";
+import { IKeyStore } from "../libs/keyStore";
 import { BaseKeyPair } from "@kinecosystem/kin-sdk-js";
 
 export class RemoteStorageProvider extends EncryptedStorageProvider {

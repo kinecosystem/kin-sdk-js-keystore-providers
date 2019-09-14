@@ -1,5 +1,5 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
-import { LocalStorageHandler } from "./libs/local-storage-handler";
+import { LocalStorageHandler } from "./libs/localStorageHandler";
 
 declare global {
   interface Window {

@@ -1,5 +1,5 @@
-import { EncryptedStorageProvider } from "./EncryptedStorageProvider";
-import { IKeyStore } from "../libs/KeyStore";
+import { EncryptedStorageProvider } from "./encryptedStorageProvider";
+import { IKeyStore } from "../libs/keyStore";
 import { getIndex } from "../libs/utils";
 import { BaseKeyPair } from "@kinecosystem/kin-sdk-js";
 

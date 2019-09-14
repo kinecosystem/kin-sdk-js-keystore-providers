@@ -1,5 +1,5 @@
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
-import { RemoteStorageProvider } from "./EncryptedStorageProviders/RemoteStorageProvider";
+import { RemoteStorageProvider } from "./encryptedStorageProviders/remoteStorageProvider";
 
 declare global {
   interface Window {

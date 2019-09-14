@@ -1,4 +1,4 @@
-import { IKeyStore, KeyStore, KeyStoreType } from "./KeyStore";
+import { IKeyStore, KeyStore, KeyStoreType } from "./keyStore";
 import * as _sodium from "libsodium-wrappers";
 import * as KinSdk from "@kinecosystem/kin-sdk-js";
 

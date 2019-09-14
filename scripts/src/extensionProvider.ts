@@ -33,18 +33,21 @@ export class ExtensionKeystoreProvider implements KinSdk.KeystoreProvider {
   }
 
   get accounts(): Promise<string[]> {
-    return new Promise((resolve, reject) => {
+    console.log("accounts()");
+    return new Promise(resolve => {
       if (this.ready)
         chrome.runtime.sendMessage(EXTENSION_ID, { action: "ACCOUNTS", secret: MY_SECRET }, (results: string[] = []) => resolve(results));
     });
   }
 
   public sign(accountAddress: string, transactionEnvelpoe: string): Promise<string> {
+    console.log("extension provider: sign");
     return new Promise(resolve => {
       chrome.runtime.sendMessage(
         EXTENSION_ID,
         { action: "SIGN", secret: MY_SECRET, data: { accountAddress, transactionEnvelpoe } },
         (signedTx: string) => {
+          console.log("extension provider: sign -> respons: " + signedTx);
           resolve(signedTx);
         }
       );
