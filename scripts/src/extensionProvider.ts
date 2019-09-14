@@ -7,7 +7,6 @@ declare global {
 }
 
 const EXTENSION_ID = "ajibgglefmgckbegajkboddpjkokdkae";
-const MY_SECRET = "my secret";
 const COOKIE_MAX_LIFE = 3600 * 24; // 24h
 const EXTENSION_URL = `https://chrome.google.com/webstore/detail/kin-sdk-extension/${EXTENSION_ID}`;
 
@@ -35,22 +34,26 @@ export class ExtensionKeystoreProvider implements KinSdk.KeystoreProvider {
   get accounts(): Promise<string[]> {
     console.log("accounts()");
     return new Promise(resolve => {
-      if (this.ready)
-        chrome.runtime.sendMessage(EXTENSION_ID, { action: "ACCOUNTS", secret: MY_SECRET }, (results: string[] = []) => resolve(results));
+      if (this.ready) chrome.runtime.sendMessage(EXTENSION_ID, { action: "ACCOUNTS" }, (results: string[] = []) => resolve(results));
     });
   }
 
-  public sign(accountAddress: string, transactionEnvelpoe: string): Promise<string> {
+  public async sign(accountAddress: string, transactionEnvelpoe: string): Promise<string> {
     console.log("extension provider: sign");
     return new Promise(resolve => {
-      chrome.runtime.sendMessage(
-        EXTENSION_ID,
-        { action: "SIGN", secret: MY_SECRET, data: { accountAddress, transactionEnvelpoe } },
-        (signedTx: string) => {
-          console.log("extension provider: sign -> respons: " + signedTx);
-          resolve(signedTx);
+      chrome.runtime.sendMessage(EXTENSION_ID, { action: "ACTIVE_SESSINO" }, respons => {
+        console.log(respons);
+        if (respons !== undefined) {
+          chrome.runtime.sendMessage(EXTENSION_ID, { action: "SIGN", data: { accountAddress, transactionEnvelpoe } }, (signedTx: string) => {
+            console.log(signedTx);
+            console.log("extension provider: sign -> respons: " + signedTx);
+            if (signedTx) resolve(signedTx);
+            else throw "Sign Error";
+          });
+        } else {
+          throw "SESSION ERROR";
         }
-      );
+      });
     });
   }
 
