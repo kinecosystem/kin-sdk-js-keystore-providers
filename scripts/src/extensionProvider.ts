@@ -6,9 +6,9 @@ declare global {
   }
 }
 
-const EXTENSION_ID = "ajibgglefmgckbegajkboddpjkokdkae";
+const EXTENSION_ID = "eckcfmndhmmoncgpkkolkpogbcoeaohg";
 const COOKIE_MAX_LIFE = 3600 * 24; // 24h
-const EXTENSION_URL = `https://chrome.google.com/webstore/detail/kin-sdk-extension/${EXTENSION_ID}`;
+const EXTENSION_URL = `https://chrome.google.com/webstore/detail/kin-wallet-chrome-extensi/${EXTENSION_ID}`;
 
 export interface ExtensionOptions {
   extension_auto_install: boolean;
@@ -62,9 +62,11 @@ export class ExtensionKeystoreProvider implements KinSdk.KeystoreProvider {
       try {
         chrome.runtime.sendMessage(EXTENSION_ID, { action: "IS_INSTALLED" }, reply => {
           if (reply) resolve(true);
+          console.log("installed");
         });
       } catch (err) {
-        const cookie = `kin_ext_install_source='${window.location.hostname}';`;
+        console.log("not installed");
+        const cookie = `kin_ext_install_source=${window.location.href};`;
         const maxAge = `max-age=${COOKIE_MAX_LIFE};`;
         const path = "path=/;";
         document.cookie = cookie.concat(maxAge, path);
