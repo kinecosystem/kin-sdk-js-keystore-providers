@@ -2,8 +2,11 @@ const SEED = "SARVSAHEAIHNN3WTCUX2YPNHPXB2PUDL3UBK3Z4RZMNPXDNUG5QD5VFF";
 const PK = "GCEMQWMFAFO5UOZHNVFQTAGQG7F3KAVNNA5TWIMO7XPJIRGU4WR3NHQJ";
 const RECIVER_PK = "GD5LWUF54MHZRZHFYFCHZ53TUVT3TWIGDM2JNRJDDWKBD4EZGQPEFULF";
 
-const keyStoreProvider = new ExtensionKeystoreProvider(KinSdk);
-const kinClient = new KinSdk.KinClient(KinSdk.Environment.Testnet, keyStoreProvider);
+const keyStoreProvider = new SimpleLocalStorageKeystoreProvider(KinSdk.BaseSdk);
+const kinClient = new KinSdk.KinClient(
+  KinSdk.Environment.Testnet,
+  keyStoreProvider
+);
 
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
@@ -22,7 +25,9 @@ new Vue({
   methods: {
     installExtension: async function() {
       try {
-        const installExtension = await keyStoreProvider.isInstalled(this.properties);
+        const installExtension = await keyStoreProvider.isInstalled(
+          this.properties
+        );
         console.info(`installExtension: ${installExtension}`);
       } catch (err) {
         console.warn(`installExtension: ${err}`);
@@ -30,7 +35,8 @@ new Vue({
     },
     refreshLocalStorageAccounts: async function() {
       try {
-        const accounts = await kinClient.kinAccounts;
+        const accounts = await kinClient.getAccounts();
+        console.log(accounts);
         this.accounts = accounts.map(account => {
           account.balance = 0;
           return account;
@@ -43,15 +49,37 @@ new Vue({
     },
     tip: async function() {
       console.log("client: tip clicked");
-      const txBuilder = await this.accounts[0].buildTransaction({
+      await this.accounts[0].sendPaymentTransaction({
         address: RECIVER_PK,
         amount: 1,
         fee: 100,
         memoText: "Tip some kin"
       });
-      console.log("client: tip -> builder done");
-      await this.accounts[0].submitTransaction(txBuilder.toString());
       console.log("client: tip -> refresh balance");
+      this.refreshBalances();
+
+      await this.accounts[0].sendPaymentTransaction(
+        {
+          address: RECIVER_PK,
+          amount: 1,
+          fee: 100,
+          memoText: "Tip some kin"
+        },
+        {
+          interceptTransactionSending(process) {
+            return new Promise(async resolve => {
+              console.log("client: interceptTransactionSending");
+              resolve(
+                await process.sendWhitelistTransaction(
+                  process.transaction().envelope
+                )
+              );
+            });
+          }
+        }
+      );
+
+      console.log("client: whitelisted tip -> refresh balance");
       this.refreshBalances();
     },
     refreshBalances: async function() {

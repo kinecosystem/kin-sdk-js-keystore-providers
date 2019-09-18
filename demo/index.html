@@ -2,7 +2,10 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>Extention Demo App</title>
     <link
       rel="stylesheet"
@@ -18,10 +21,16 @@
     <div class="container mt-4" id="root">
       <div class="row">
         <div class="card col-3">
-          <img src="https://www.dogshopnw.com/wp-content/uploads/2016/01/doggroomingvancouverwa-funfacts-200x200.jpg" class="card-img-top" />
+          <img
+            src="https://www.dogshopnw.com/wp-content/uploads/2016/01/doggroomingvancouverwa-funfacts-200x200.jpg"
+            class="card-img-top"
+          />
           <div class="card-body">
             <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
             <button type="button" class="btn btn-primary" @click="tip">
               Tip Someone
             </button>
@@ -30,17 +39,23 @@
         <div class="col-sm" id="status">
           <h3>LocalStorage Account</h3>
           <ul class="list-group">
-            <li class="list-group-item" v-for="account in accounts">{{ account._publicAddress }} : {{ account.balance }}</li>
+            <li class="list-group-item" v-for="account in accounts">
+              {{ account._publicAddress }} : {{ account.balance }}
+            </li>
           </ul>
-          <button type="button" class="btn btn-primary" @click="installExtension">
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="installExtension"
+          >
             Install Extension (set cookie)
           </button>
         </div>
       </div>
     </div>
 
-    <script src="../dist/extensionProvider.js"></script>
-    <script src="./kin-sdk.js"></script>
+    <script src="../dist/simpleLocalstorageProvider.js"></script>
+    <script src="./kin-sdk@0.0.12.js"></script>
     <script defer src="./app.js"></script>
   </body>
 </html>

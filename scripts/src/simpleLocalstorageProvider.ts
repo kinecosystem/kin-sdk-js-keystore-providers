@@ -1,5 +1,6 @@
-import * as KinSdk from "@kinecosystem/kin-sdk-js";
+import * as KinSdk from "@kinecosystem/kin-sdk-js-web";
 import { LocalStorageHandler } from "./libs/localStorageHandler";
+import { Environment } from "@kinecosystem/kin-sdk-js-common";
 
 declare global {
   interface Window {
@@ -9,34 +10,41 @@ declare global {
 
 const KIN_WALLET_STORAGE_INDEX = "kin-wallet";
 
-export class SimpleLocalStorageKeystoreProvider implements KinSdk.KeystoreProvider {
+export class SimpleLocalStorageKeystoreProvider
+  implements KinSdk.KeystoreProvider {
   private _storage: LocalStorageHandler;
 
-  constructor(private readonly _sdk: typeof KinSdk, secret: string) {
+  constructor(private readonly baseSdk: typeof KinSdk.BaseSdk, secret: string) {
     this._storage = new LocalStorageHandler(KIN_WALLET_STORAGE_INDEX, secret);
   }
 
   public addKeyPair(seed: string) {
-    if (seed == undefined) this._storage.add(this._sdk.KeyPair.generate().seed);
+    if (seed == undefined)
+      this._storage.add(this.baseSdk.Keypair.random().secret());
     else this._storage.add(seed);
   }
 
-  get accounts() {
+  get publicAddresses() {
     let seeds = this._storage.get();
-    let accounts = seeds.map(seed => this._sdk.KeyPair.fromSeed(seed).publicAddress);
+    let accounts = seeds.map(seed =>
+      this.baseSdk.Keypair.fromSecret(seed).publicKey()
+    );
     return Promise.resolve(accounts);
   }
 
-  public async sign(accountAddress: string, transactionEnvelpoe: string) {
+  public async sign(transactionEnvelpoe: string, ...accountAddress: string[]) {
     let seeds = await this._storage.get();
-    const seed = seeds.find(seed => {
-      let tmpAcc = this._sdk.KeyPair.fromSeed(seed);
-      if (accountAddress == tmpAcc.publicAddress) return seed;
-    });
-    if (seed != null) {
-      const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
-      const signers = new Array();
-      signers.push(this._sdk.BaseKeyPair.fromSecret(seed));
+    const keypairs = seeds.map(seed => this.baseSdk.Keypair.fromSecret(seed));
+    const filtered = keypairs.filter(keypair =>
+      accountAddress.includes(keypair.publicKey())
+    );
+    this.baseSdk.Network.use(
+      new this.baseSdk.Network(Environment.Testnet.passphrase)
+    );
+    if (filtered != null) {
+      const tx = new this.baseSdk.Transaction(transactionEnvelpoe);
+      const signers = [];
+      signers.push(...filtered);
       tx.sign(...signers);
       return Promise.resolve(
         tx

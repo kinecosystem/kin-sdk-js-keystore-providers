@@ -1,4 +1,4 @@
-import * as KinSdk from "@kinecosystem/kin-sdk-js";
+import * as KinSdk from "@kinecosystem/kin-sdk-js-web";
 
 window.idb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 declare global {

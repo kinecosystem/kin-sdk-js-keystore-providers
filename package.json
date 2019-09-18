@@ -11,15 +11,17 @@
     "start": "webpack --watch -d & live-server"
   },
   "devDependencies": {
-    "@kinecosystem/kin-sdk-js": "^0.1.10",
-    "@types/crypto-js": "^3.1.43",
     "@types/chrome": "0.0.88",
+    "@types/crypto-js": "^3.1.43",
     "@types/node": "^12.7.4",
     "live-server": "^1.2.1",
     "ts-loader": "^6.0.4",
     "typescript": "^3.3.4000",
     "webpack": "^4.37.0",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.6",
+    "@kinecosystem/kin-base": "^0.20.4",
+    "@kinecosystem/kin-sdk-js-common": "^0.2.8",
+    "@kinecosystem/kin-sdk-js-web": "0.0.11"
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",

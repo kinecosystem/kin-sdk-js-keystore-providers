@@ -1,33 +1,33 @@
-import * as KinSdk from "@kinecosystem/kin-sdk-js";
-
+import * as KinSdk from "@kinecosystem/kin-sdk-js-web";
 declare global {
   interface Window {
     SimpleKeystoreProvider: typeof SimpleKeystoreProvider;
   }
 }
 
-export class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
-  private _keypairs: KinSdk.KeyPair[];
+export class SimpleKeystoreProvider implements KeystoreProvider {
+  private _keypairs: Keypair[];
 
-  constructor(private readonly _sdk: typeof KinSdk, _seed?: string) {
+  constructor(private readonly _sdk: any) {
     this._keypairs = [];
-    this._keypairs[0] = _seed !== undefined ? this._sdk.KeyPair.fromSeed(_seed) : this._sdk.KeyPair.generate();
+    this.addKeyPair();
   }
 
   public addKeyPair() {
-    this._keypairs[this._keypairs.length] = this._sdk.KeyPair.generate();
+    this._keypairs.push(this._sdk.Keypair.random());
   }
 
-  get accounts() {
-    return Promise.resolve(this._keypairs.map(keypair => keypair.publicAddress));
+  get publicAddresses() {
+    return Promise.resolve(this._keypairs.map(keypair => keypair.publicKey()));
   }
 
-  public sign(accountAddress: string, transactionEnvelpoe: string) {
-    const keypair = this.getKeyPairFor(accountAddress);
-    if (keypair != null) {
-      const tx = new this._sdk.XdrTransaction(transactionEnvelpoe);
+  public sign(transactionEnvelpoe: string, ...accountAddress: string[]) {
+    const keypairs = this._keypairs.filter(acc => accountAddress.includes(acc.publicKey()));
+    this._sdk.Network.use(new this._sdk.Network(this._sdk.Environment.Testnet.passphrase));
+    if (keypairs != null) {
+      const tx = new this._sdk.Transaction(transactionEnvelpoe);
       const signers = [];
-      signers.push(this._sdk.BaseKeyPair.fromSecret(keypair.seed));
+      signers.push(...keypairs);
       tx.sign(...signers);
       return Promise.resolve(
         tx
@@ -38,10 +38,6 @@ export class SimpleKeystoreProvider implements KinSdk.KeystoreProvider {
     } else {
       return Promise.reject("keypair null");
     }
-  }
-
-  public getKeyPairFor(publicAddress: string) {
-    return this._keypairs.find(keypair => keypair.publicAddress === publicAddress) || null;
   }
 }
 

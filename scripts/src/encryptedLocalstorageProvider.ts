@@ -1,4 +1,4 @@
-import * as KinSdk from "@kinecosystem/kin-sdk-js";
+import * as KinSdk from "@kinecosystem/kin-sdk-js-web";
 import { LocalStorageProvider } from "./encryptedStorageProviders/eocalStorageProvider";
 
 declare global {

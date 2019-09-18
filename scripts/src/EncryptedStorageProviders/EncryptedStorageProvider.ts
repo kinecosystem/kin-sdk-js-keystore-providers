@@ -1,6 +1,6 @@
 import { DefaultKeyStoreCryptoProvider, IKeyStoreCryptoProvider } from "../libs/cryptoProvider";
 import { IKeyStore, KeyStore, KeyStoreType } from "../libs/keyStore";
-import { BaseKeyPair } from "@kinecosystem/kin-sdk-js";
+import { BaseKeyPair } from "@kinecosystem/kin-sdk-js-web";
 
 interface KinAccounts {
   [publicAddres: string]: IKeyStore;

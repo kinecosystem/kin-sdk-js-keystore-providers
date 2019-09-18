@@ -1,6 +1,6 @@
 import { IKeyStore, KeyStore, KeyStoreType } from "./keyStore";
 import * as _sodium from "libsodium-wrappers";
-import * as KinSdk from "@kinecosystem/kin-sdk-js";
+import * as KinSdk from "@kinecosystem/kin-sdk-js-web";
 
 export interface IKeyStoreCryptoProvider {
   encrypt: (keyStore: IKeyStore, secret: string) => Promise<IKeyStore>;
